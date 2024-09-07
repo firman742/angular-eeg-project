@@ -1,1 +1,10 @@
-<mat-slide-toggle>Toggle me!</mat-slide-toggle>
+<div class="main">
+  <h1>EEG Data Capture</h1>
+  <button (click)="connectMuse()">Connect to Muse</button>
+  <div *ngIf="eegData.length > 0">
+    <h2>EEG Data</h2>
+    <div *ngFor="let data of eegData">
+      <p>EEG Signal: {{ data }}</p>
+    </div>
+  </div>
+</div>
