@@ -1,0 +1,22 @@
+h1 {
+  font-family: Lato;
+}
+
+.mmain {
+  padding: 10px;
+}
+
+button {
+  padding: 10px;
+  margin-right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+}

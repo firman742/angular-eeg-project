@@ -1,0 +1,88 @@
+{
+  "hash": "f02142f6",
+  "configHash": "bac61401",
+  "lockfileHash": "72a9885f",
+  "browserHash": "2c2b6de5",
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+      "fileHash": "d048673a",
+      "needsInterop": false
+    },
+    "@angular/common/http": {
+      "src": "../../../../../node_modules/@angular/common/fesm2022/http.mjs",
+      "file": "@angular_common_http.js",
+      "fileHash": "83417ed8",
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "a9373cb7",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "081795c5",
+      "needsInterop": false
+    },
+    "@angular/platform-browser/animations/async": {
+      "src": "../../../../../node_modules/@angular/platform-browser/fesm2022/animations/async.mjs",
+      "file": "@angular_platform-browser_animations_async.js",
+      "fileHash": "ba52fa38",
+      "needsInterop": false
+    },
+    "@angular/platform-server": {
+      "src": "../../../../../node_modules/@angular/platform-server/fesm2022/platform-server.mjs",
+      "file": "@angular_platform-server.js",
+      "fileHash": "75bfa697",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "0703d497",
+      "needsInterop": false
+    },
+    "muse-js": {
+      "src": "../../../../../node_modules/muse-js/dist/muse.js",
+      "file": "muse-js.js",
+      "fileHash": "3361049f",
+      "needsInterop": true
+    },
+    "ng2-charts": {
+      "src": "../../../../../node_modules/ng2-charts/fesm2022/ng2-charts.mjs",
+      "file": "ng2-charts.js",
+      "fileHash": "5b9d5578",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "browser-3JOGLQAG": {
+      "file": "browser-3JOGLQAG.js"
+    },
+    "xhr2-BUVT5WOY": {
+      "file": "xhr2-BUVT5WOY.js"
+    },
+    "chunk-BN7WNBOT": {
+      "file": "chunk-BN7WNBOT.js"
+    },
+    "chunk-HUFC3YZJ": {
+      "file": "chunk-HUFC3YZJ.js"
+    },
+    "chunk-7FA6QN2B": {
+      "file": "chunk-7FA6QN2B.js"
+    },
+    "chunk-BYGFVVON": {
+      "file": "chunk-BYGFVVON.js"
+    },
+    "chunk-X3DF5PLL": {
+      "file": "chunk-X3DF5PLL.js"
+    },
+    "chunk-DMBRYCWF": {
+      "file": "chunk-DMBRYCWF.js"
+    }
+  }
+}
