@@ -2,9 +2,8 @@
   <h1>EEG Data Capture & Visualization</h1>
   <button (click)="connectMuse()">Connect to Muse</button>
   <button (click)="fetchEEGData()">Fetch EEG Data</button>
-  <!-- <canvas baseChart
-          [data]="lineChartData"
-          [options]="lineChartOptions"
-          chartType="line">
-  </canvas> -->
+  <div *ngIf="eegData.length > 0">
+    <h2>Raw EEG Data</h2>
+    <pre>{{ eegData | json }}</pre>
+  </div>
 </div>
