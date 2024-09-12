@@ -1,0 +1,43 @@
+Apa yang kurang:
+====
+Menyimpan data eeg ke mysql (Data apa yang perlu disimpan dalam database dan cara pengelolaannya), tolong lebih ke fungsionalitasnya saja
+nama tablenya:
+- Disabilitas
+kode_disabilitas int (PK)
+jenis_disabilitas varchar(25)
+kode_level enum('00', '01', '10', '11')
+
+- Klasifikasi
+nis int (fk from siswa)
+kode_test int
+tgl_test date
+kode_level int (fk from level)
+
+- level
+kode_level int (PK)
+Kesiapan (varchar)
+deskripsi (longText)
+
+- siswa
+nis int (PK)
+nama varchar(50)
+gender enum('laki-laki', 'perempuan')
+tgl_lahir date
+tempat_lahir varchar(25)
+kode_disabilitas int (25) (fk from disabilitas)
+
+
+
+
+
+
+
+
+
+==================
+- Membuat Chart / bagan untuk tampilan eeg (Harus selesai malem ini)
+- Membuat Kalender
+- Membuat Sistem login
+- Merapikan tampilan
+
+
