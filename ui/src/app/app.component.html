@@ -1,9 +1,12 @@
+<!-- app.component.html -->
 <div class="main">
   <h1>EEG Data Capture & Visualization</h1>
-  <button (click)="connectMuse()">Connect to Muse</button>
-  <button (click)="fetchEEGData()">Fetch EEG Data</button>
-  <div *ngIf="eegData.length > 0">
-    <h2>Raw EEG Data</h2>
-    <pre>{{ eegData | json }}</pre>
+  <div class="button-container">
+    <button (click)="connectMuse()">Connect to Muse</button>
+    <button (click)="fetchEEGData()">Fetch EEG Data</button>
+  </div>
+  <!-- Display the chart only if there is EEG data -->
+  <div *ngIf="eegData.length > 0" class="chart-container">
+    <ag-charts style="height: 400px;" [options]="chartOptions"></ag-charts>
   </div>
 </div>

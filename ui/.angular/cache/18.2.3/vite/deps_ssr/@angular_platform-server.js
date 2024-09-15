@@ -7,18 +7,18 @@ import {
   NoopAnimationDriver,
   WebAnimationsDriver,
   WebAnimationsStyleNormalizer
-} from "./chunk-BN7WNBOT.js";
+} from "./chunk-QL7X4KCZ.js";
 import {
   BrowserDomAdapter,
   BrowserModule,
   DomRendererFactory2,
   EVENT_MANAGER_PLUGINS,
   EventManagerPlugin
-} from "./chunk-HUFC3YZJ.js";
+} from "./chunk-PR5UHRKL.js";
 import {
   HTTP_ROOT_INTERCEPTOR_FNS,
   HttpClientModule
-} from "./chunk-7FA6QN2B.js";
+} from "./chunk-MA53WTGT.js";
 import {
   DOCUMENT,
   NullViewportScroller,
@@ -28,7 +28,7 @@ import {
   XhrFactory,
   getDOM,
   setRootDomAdapter
-} from "./chunk-BYGFVVON.js";
+} from "./chunk-QQJXPQGI.js";
 import {
   ALLOW_MULTIPLE_PLATFORMS,
   ANIMATION_MODULE_TYPE,
@@ -65,11 +65,11 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-X3DF5PLL.js";
+} from "./chunk-X7UVH4P7.js";
 import {
   __async,
   __toESM
-} from "./chunk-DMBRYCWF.js";
+} from "./chunk-FQORKCB4.js";
 
 // node_modules/@angular/platform-browser/fesm2022/animations.mjs
 var _InjectableAnimationEngine = class _InjectableAnimationEngine extends AnimationEngine {
@@ -16544,7 +16544,7 @@ var _ServerXhr = class _ServerXhr {
       if (!this.xhrImpl) {
         const {
           default: xhr
-        } = yield import("./xhr2-BUVT5WOY.js");
+        } = yield import("./xhr2-W52CWYN4.js");
         this.xhrImpl = xhr;
       }
     });
