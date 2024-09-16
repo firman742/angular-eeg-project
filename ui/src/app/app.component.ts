@@ -24,6 +24,8 @@ export class AppComponent implements OnInit {
   }[] = [];
   nis: number = 101;
   heartRate: number = 72;
+  updateInterval: number = 10; // Set the interval to 10 ms
+  updateIntervalId: any;
 
   constructor(private http: HttpClient) {
     this.museClient = new MuseClient();
@@ -56,20 +58,15 @@ export class AppComponent implements OnInit {
       let timeIndex = 0;
 
       this.museClient.eegReadings.subscribe((reading) => {
-        // Print the structure of the reading for debugging
-        console.log('EEG Reading:', reading);
-
         const samples = reading.samples;
 
         // Check if samples is an array and has the expected length
         if (Array.isArray(samples) && samples.length >= 4) {
-          // Adjust these indices based on your specific Muse configuration
-          const TP9 = samples[0]; // Replace with the correct index
-          const AF7 = samples[1]; // Replace with the correct index
-          const AF8 = samples[2]; // Replace with the correct index
-          const TP10 = samples[3]; // Replace with the correct index
+          const TP9 = samples[0];
+          const AF7 = samples[1];
+          const AF8 = samples[2];
+          const TP10 = samples[3];
 
-          // Store EEG data for each channel
           this.eegData.push({
             time: timeIndex++,
             TP9: TP9,
@@ -78,23 +75,12 @@ export class AppComponent implements OnInit {
             TP10: TP10,
           });
 
-          // Update chart data
-          this.updateChartData();
-
-          // Send EEG data to the backend
-          this.http
-            .post('http://localhost:3000/api/eeg-data', {
-              nis: this.nis,
-              eegValues: this.eegData,
-            })
-            .subscribe((response) => {
-              console.log('Data saved:', response);
-            });
+          // Schedule the real-time update
+          if (!this.updateIntervalId) {
+            this.startRealTimeUpdate();
+          }
         } else {
-          console.error(
-            'Samples data is not in the expected format. Data:',
-            samples
-          );
+          console.error('Samples data is not in the expected format. Data:', samples);
         }
       });
     } catch (error) {
@@ -102,11 +88,41 @@ export class AppComponent implements OnInit {
     }
   }
 
+  startRealTimeUpdate(): void {
+    // Update the chart every 10ms
+    this.updateIntervalId = setInterval(() => {
+      this.updateChartData();
+
+      // Optionally batch send data to backend every 1 second
+      if (this.eegData.length > 0) {
+        this.sendDataToBackend();
+      }
+    }, this.updateInterval);
+  }
+
+  stopRealTimeUpdate(): void {
+    if (this.updateIntervalId) {
+      clearInterval(this.updateIntervalId);
+      this.updateIntervalId = null;
+    }
+  }
+
   updateChartData(): void {
     this.chartOptions = {
       ...this.chartOptions,
-      data: this.eegData,
+      data: this.eegData.slice(-100), // Keep only the last 100 data points to improve performance
     };
+  }
+
+  sendDataToBackend(): void {
+    this.http
+      .post('http://localhost:3000/api/eeg-data', {
+        nis: this.nis,
+        eegValues: this.eegData,
+      })
+      .subscribe((response) => {
+        console.log('Data saved:', response);
+      });
   }
 
   fetchEEGData(): void {
