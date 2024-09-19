@@ -35,9 +35,34 @@ kode_disabilitas int (25) (fk from disabilitas)
 
 
 ==================
-- Membuat Chart / bagan untuk tampilan eeg (Harus selesai malem ini)
-- Membuat Kalender
-- Membuat Sistem login
-- Merapikan tampilan
+Progress:
+1. Membuat array [4] 17 Sept
+2. Membaca array --> visualisasi (18 Sep)
+3. tempelkan mockup: baca kalender (input nama. tgl)- baca array - history (18 Sep)
+4. revisi jangkauan array: pengamatan hafiz dg alat + literatur ilmiah alwan (19 Sep)
+
+
+laporan:
+1. capture pembacaan raw data 17 Sep
+2. perancangan system 17-18 Sep
+3. klasifikasi gelombang (poin 4 diatas, kategori: 4) 18-19 sep
+
+
+=============================
+Hasil Report (18-09-2024)
+- Kita sudah berhasil ambil data dan tentukan array-nya yaitu [RAW_TP9, RAW_AF7, RAW_AF8, RAW_TP10]. namun saya kesulitan untuk menentukan klasifikasinya, sehingga saya diminta fokus buat nyiapin wadah untuk data2 array ini sambil menunggu hasil penentuan klasifikasi yang sedang dicari fayyad dan bu tining
+- Untuk mockup kalendernya, seperti planning aku diawal, yaitu kalender sebagai riwayat data scanning yang telah dilakukan
+- penyimpanan data record scanningnya berdasarkan durasi, misal kita dengan waktu durasi sekian kita simpan data array tadi dalam sebuah json atau sebagainya, intinya biar bisa menampilkan kembali datanya digrafik
+- Untuk detail rekaman, perlu ditampilkan data2 umum serta hasil klasifikasinya beserta grafiknya juga
+
+
+jadi step yang harus aku lakukan:
+- Menyiapkan wadah buat array2 tadi, biar kita bisa klasifikasi datanya, beserta disiapkan function untuk logika klasifikasinya
+- Redesign database untuk recording
+- Menyiapkan tampilan hasil
+- Menyiapkan tampilan kalender
+
+
+
 
 

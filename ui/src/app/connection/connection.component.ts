@@ -59,6 +59,8 @@ export class ConnectionComponent implements OnInit {
 
       this.museClient.eegReadings.subscribe((reading) => {
         const samples = reading.samples;
+        console.log(samples);
+
 
         if (Array.isArray(samples) && samples.length >= 4) {
           const TP9 = samples[0];

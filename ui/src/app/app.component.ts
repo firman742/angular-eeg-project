@@ -5,6 +5,23 @@ import { RouterModule } from '@angular/router';
   selector: 'app-root',
   standalone: true,
   imports: [RouterModule],
-  template: `<router-outlet></router-outlet>`,  // Router outlet untuk menampilkan halaman berdasarkan rute
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
 })
-export class AppComponent {}
+export class AppComponent {
+  // array data keeped
+  eegData: {
+    time: number;
+    deltha: number;
+    theta: number;
+    alpha: number;
+    gama: number;
+    beta: number;
+  }[] = [];
+
+  // read data from muse
+
+  // push data
+
+  // visualize data as chart
+}
