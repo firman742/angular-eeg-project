@@ -2,7 +2,8 @@
 <div class="main">
   <h1>Petaotak.com</h1>
   <div class="button-container">
-    <button (click)="connectMuse()">Connect to Muse</button>
+    <button (click)="connectMuse()" [disabled]="isConnected">Connect to Muse</button>
+    <button (click)="disconnectMuse()" [disabled]="!isConnected">Stop Connect</button>
     <!-- <button (click)="fetchEEGData()">Fetch EEG Data</button> -->
   </div>
   <!-- Display the chart only if there is EEG data -->

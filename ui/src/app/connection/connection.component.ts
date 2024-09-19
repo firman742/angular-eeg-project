@@ -26,6 +26,7 @@ export class ConnectionComponent implements OnInit {
   heartRate: number = 72;
   updateInterval: number = 10;
   updateIntervalId: any;
+  isConnected: boolean = false; // Flag untuk status koneksi
 
   constructor(private http: HttpClient) {
     this.museClient = new MuseClient();
@@ -48,19 +49,20 @@ export class ConnectionComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.fetchEEGData(); // Load historical data on init
+  }
 
   async connectMuse(): Promise<void> {
     try {
       await this.museClient.connect();
       await this.museClient.start();
+      this.isConnected = true; // Set flag when connected
 
       let timeIndex = 0;
 
       this.museClient.eegReadings.subscribe((reading) => {
         const samples = reading.samples;
-        console.log(samples);
-
 
         if (Array.isArray(samples) && samples.length >= 4) {
           const TP9 = samples[0];
@@ -85,6 +87,20 @@ export class ConnectionComponent implements OnInit {
       });
     } catch (error) {
       console.error('Error connecting to Muse:', error);
+    }
+  }
+
+  // Fungsi untuk menghentikan koneksi
+  async disconnectMuse(): Promise<void> {
+    try {
+      if (this.isConnected) {
+        await this.museClient.disconnect();
+        this.stopRealTimeUpdate(); // Hentikan pembaruan real-time
+        this.isConnected = false; // Set flag saat terputus
+        console.log('Disconnected from Muse.');
+      }
+    } catch (error) {
+      console.error('Error disconnecting from Muse:', error);
     }
   }
 
@@ -116,7 +132,7 @@ export class ConnectionComponent implements OnInit {
     this.http
       .post('http://localhost:3000/api/eeg-data', {
         nis: this.nis,
-        eegValues: this.eegData,
+        eegValues: JSON.stringify(this.eegData),
       })
       .subscribe((response) => {
         console.log('Data saved:', response);
