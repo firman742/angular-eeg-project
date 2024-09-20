@@ -2,9 +2,9 @@
 <div class="main">
   <h1>Petaotak.com</h1>
   <div class="button-container">
-    <button (click)="connectMuse()" [disabled]="isConnected">Connect to Muse</button>
-    <button (click)="disconnectMuse()" [disabled]="!isConnected">Stop Connect</button>
-    <!-- <button (click)="fetchEEGData()">Fetch EEG Data</button> -->
+    <button mat-flat-button (click)="connectMuse()" [disabled]="isConnected && !beforeFinished">Connect to Muse</button>
+    <button mat-flat-button (click)="disconnectMuse()" [disabled]="!isConnected">Stop Connect</button>
+    <button mat-flat-button (click)="finishScanning()" [disabled]="!beforeFinished">Finish</button>
   </div>
   <!-- Display the chart only if there is EEG data -->
   <div *ngIf="eegData.length > 0" class="chart-container">

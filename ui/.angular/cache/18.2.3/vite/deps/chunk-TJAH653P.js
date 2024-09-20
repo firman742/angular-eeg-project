@@ -3455,6 +3455,20 @@ function last2(predicate, defaultValue) {
   };
 }
 
+// node_modules/rxjs/dist/esm5/internal/operators/pairwise.js
+function pairwise() {
+  return operate(function(source, subscriber) {
+    var prev;
+    var hasPrev = false;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      var p = prev;
+      prev = value;
+      hasPrev && subscriber.next([p, value]);
+      hasPrev = true;
+    }));
+  });
+}
+
 // node_modules/rxjs/dist/esm5/internal/operators/scan.js
 function scan(accumulator, seed) {
   return operate(scanInternals(accumulator, seed, arguments.length >= 2, true));
@@ -3618,6 +3632,21 @@ function takeUntil(notifier) {
       return subscriber.complete();
     }, noop));
     !subscriber.closed && source.subscribe(subscriber);
+  });
+}
+
+// node_modules/rxjs/dist/esm5/internal/operators/takeWhile.js
+function takeWhile(predicate, inclusive) {
+  if (inclusive === void 0) {
+    inclusive = false;
+  }
+  return operate(function(source, subscriber) {
+    var index = 0;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      var result = predicate(value, index++);
+      (result || inclusive) && subscriber.next(value);
+      !result && subscriber.complete();
+    }));
   });
 }
 
@@ -27315,6 +27344,8 @@ export {
   ConnectableObservable,
   Subject,
   BehaviorSubject,
+  asapScheduler,
+  animationFrameScheduler,
   EMPTY,
   from,
   of,
@@ -27343,6 +27374,7 @@ export {
   first,
   takeLast,
   last2 as last,
+  pairwise,
   scan,
   share,
   shareReplay,
@@ -27350,6 +27382,7 @@ export {
   startWith,
   switchMap,
   takeUntil,
+  takeWhile,
   tap,
   XSS_SECURITY_URL,
   RuntimeError,
@@ -27865,4 +27898,4 @@ export {
    * found in the LICENSE file at https://angular.io/license
    *)
 */
-//# sourceMappingURL=chunk-XOG4WJE6.js.map
+//# sourceMappingURL=chunk-TJAH653P.js.map

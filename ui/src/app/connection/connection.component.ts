@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'; // Import MatDialog
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { MuseClient } from 'muse-js';
 import { AgCharts } from 'ag-charts-angular';
 import { AgCartesianChartOptions } from 'ag-charts-community';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'; // Import dialog component
 
 @Component({
   selector: 'app-connection',
   standalone: true,
-  imports: [CommonModule, AgCharts],
+  imports: [CommonModule, AgCharts, MatButtonModule, MatDialogModule], // Import MatDialogModule
   templateUrl: './connection.component.html',
   styleUrls: ['./connection.component.css'],
 })
@@ -26,9 +30,10 @@ export class ConnectionComponent implements OnInit {
   heartRate: number = 72;
   updateInterval: number = 10;
   updateIntervalId: any;
-  isConnected: boolean = false; // Flag untuk status koneksi
+  isConnected: boolean = false;
+  beforeFinished: boolean = false;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public dialog: MatDialog) { // Inject MatDialog
     this.museClient = new MuseClient();
     this.chartOptions = {
       data: [],
@@ -50,14 +55,14 @@ export class ConnectionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchEEGData(); // Load historical data on init
+    this.fetchEEGData();
   }
 
   async connectMuse(): Promise<void> {
     try {
       await this.museClient.connect();
       await this.museClient.start();
-      this.isConnected = true; // Set flag when connected
+      this.isConnected = true;
 
       let timeIndex = 0;
 
@@ -90,18 +95,36 @@ export class ConnectionComponent implements OnInit {
     }
   }
 
-  // Fungsi untuk menghentikan koneksi
   async disconnectMuse(): Promise<void> {
     try {
       if (this.isConnected) {
         await this.museClient.disconnect();
-        this.stopRealTimeUpdate(); // Hentikan pembaruan real-time
-        this.isConnected = false; // Set flag saat terputus
+        this.stopRealTimeUpdate();
+        this.isConnected = false;
+        this.beforeFinished = true;
+
         console.log('Disconnected from Muse.');
       }
     } catch (error) {
       console.error('Error disconnecting from Muse:', error);
     }
+  }
+
+  // Open confirmation dialog when user clicks "Finish"
+  finishScanning(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Data classification started...');
+        // Simulate the classification process and redirect to result page
+        setTimeout(() => {
+          window.location.href = '/result';
+        }, 2000); // Simulate 2-second classification delay
+      } else {
+        console.log('User canceled the finish operation.');
+      }
+    });
   }
 
   startRealTimeUpdate(): void {
@@ -139,16 +162,7 @@ export class ConnectionComponent implements OnInit {
       });
   }
 
-  fetchEEGData(): void {
-    this.http
-      .get('http://localhost:3000/api/eeg-data')
-      .subscribe((data: any) => {
-        const eegDataArray = data.map((entry: any) =>
-          JSON.parse(entry.eegValues)
-        );
-
-        this.eegData = eegDataArray.flat();
-        this.updateChartData();
-      });
+  fetchEEGData(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:3000/api/eeg-data');
   }
 }

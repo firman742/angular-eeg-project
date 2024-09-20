@@ -5,7 +5,9 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+
+// Increase the limit for body parser
+app.use(bodyParser.json({ limit: '50mb' })); // Adjust the limit as needed
 
 // Koneksi ke MySQL
 const db = mysql.createConnection({
@@ -24,20 +26,33 @@ db.connect(err => {
 app.post('/api/eeg-data', (req, res) => {
   const { nis, eegValues } = req.body;
 
+  // Assuming eegValues is already an object, so we can store it as JSON
   const query = 'INSERT INTO klasifikasi (nis, eegValues) VALUES (?, ?)';
 
-  db.query(query, [nis, eegValues], (err, result) => {
+  db.query(query, [nis, JSON.stringify(eegValues)], (err, result) => {
     if (err) throw err;
     res.send({ success: true, message: 'EEG data saved successfully!' });
   });
 });
 
-// API untuk mengambil data EEG dari tabel klasifikasi
+// API untuk mengambil data EEG dari tabel klasifikasi berdasarkan created_at
 app.get('/api/eeg-data', (req, res) => {
-  const query = `SELECT * FROM klasifikasi`;
+  const targetTimestamp = '2024-09-19 22:39:24'; // Timestamp yang diinginkan
 
-  db.query(query, (err, results) => {
+  // Menambahkan kondisi WHERE pada query
+  const query = 'SELECT * FROM klasifikasi WHERE created_at = ?';
+
+  db.query(query, [targetTimestamp], (err, results) => {
     if (err) throw err;
+
+    // Parse the JSON data in eegValues before sending it to the frontend
+    results = results.map(result => {
+      return {
+        ...result,
+        eegValues: JSON.parse(result.eegValues)
+      };
+    });
+
     res.json(results);
   });
 });

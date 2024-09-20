@@ -7,8 +7,7 @@ import {
   NoopAnimationDriver,
   WebAnimationsDriver,
   WebAnimationsStyleNormalizer
-} from "./chunk-S3RFJ3FL.js";
-import "./chunk-XBITE3JB.js";
+} from "./chunk-TV6WKJGR.js";
 import {
   BrowserDomAdapter,
   BrowserModule,
@@ -20,6 +19,7 @@ import {
   HTTP_ROOT_INTERCEPTOR_FNS,
   HttpClientModule
 } from "./chunk-D5I6S3WG.js";
+import "./chunk-42DMGMDJ.js";
 import {
   DOCUMENT,
   NullViewportScroller,
