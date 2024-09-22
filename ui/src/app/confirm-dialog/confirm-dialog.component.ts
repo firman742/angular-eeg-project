@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from "@angular/material/button";
 import {
-  MatDialog,
-  MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogTitle,
   MatDialogContent,

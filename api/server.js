@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const cron = require('node-cron');
 
 const app = express();
 app.use(cors());
@@ -22,17 +23,61 @@ db.connect(err => {
   console.log('Connected to MySQL Database!');
 });
 
-// API untuk menerima data EEG dari frontend dan menyimpannya ke tabel klasifikasi
+// API untuk menerima data EEG dari frontend dan menyimpannya ke tabel eeg_signals
 app.post('/api/eeg-data', (req, res) => {
-  const { nis, eegValues } = req.body;
+  const { nis, eegValues, sessionId } = req.body;
 
-  // Assuming eegValues is already an object, so we can store it as JSON
-  const query = 'INSERT INTO klasifikasi (nis, eegValues) VALUES (?, ?)';
+  const query = 'INSERT INTO eeg_signals (session_id, device_id, timestamp, channel, signal_value) VALUES ?';
 
-  db.query(query, [nis, JSON.stringify(eegValues)], (err, result) => {
+  const values = eegValues.map(eeg => [
+    sessionId,
+    eeg.device_id,
+    eeg.timestamp,
+    eeg.channel,
+    eeg.signal_value
+  ]);
+
+  console.log(values);
+
+
+  db.query(query, [values], (err, result) => {
     if (err) throw err;
     res.send({ success: true, message: 'EEG data saved successfully!' });
   });
+});
+
+// Fungsi Downsampling
+function downsampleEEGData() {
+  const downsamplingQuery = `
+      INSERT INTO eeg_signal_downsampling (session_id, device_id, channel, time_bucket, avg_signal, created_at)
+      SELECT
+          session_id,
+          device_id,
+          channel,
+          DATE_FORMAT(FROM_UNIXTIME(timestamp), '%Y-%m-%d %H:%i:00') AS time_bucket,
+          AVG(signal_value) AS avg_signal,
+          NOW() AS created_at
+      FROM
+          eeg_signals
+      WHERE
+          created_at < NOW() - INTERVAL 7 DAY
+      GROUP BY
+          session_id, device_id, channel, time_bucket;
+  `;
+
+  db.query(downsamplingQuery, (err, result) => {
+    if (err) {
+      console.error('Error during downsampling:', err);
+      return;
+    }
+    console.log('Downsampling completed:', result);
+  });
+}
+
+// Menjadwalkan tugas setiap 7 hari
+cron.schedule('0 0 */7 * *', () => {
+  console.log('Running downsampling task...');
+  downsampleEEGData(); // Memanggil fungsi downsampling
 });
 
 // API untuk mengambil data EEG dari tabel klasifikasi berdasarkan created_at

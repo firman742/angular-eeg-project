@@ -66,3 +66,23 @@ jadi step yang harus aku lakukan:
 
 
 
+
+
+
+
+
+
+===========
+- Tinggal menyesuaikan table & kolomnya, serta menampilkannya dihalaman result
+- Memperbaiki Klasifikasi
+- Untuk Durasinya tetep pada 100ms cuma kalo bisa 1 kali scan itu 1 row data, agar Ketika dibaca oleh grafik menjadi lebih mudah
+- Membuat tampilan untuk history
+
+
+
+harusnya dalam 1 kali scan itu, membuat sebanyak 40 data dalam 1000ms -> karna tiap 100ms dibuat 1 data
+
+
+
+==========
+Klasifikasi Tingkat Kesiapan: Setelah model dilatih, sinyal EEG baru dapat digunakan untuk mengklasifikasikan tingkat kesiapan belajar siswa. Misalnya, kesiapan tinggi (dominan Beta), kesiapan sedang (dominan Alpha), atau kesiapan rendah (dominan Theta).
