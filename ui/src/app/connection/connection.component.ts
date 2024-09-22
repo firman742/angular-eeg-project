@@ -8,6 +8,7 @@ import { MuseClient } from 'muse-js';
 import { AgCharts } from 'ag-charts-angular';
 import { AgCartesianChartOptions } from 'ag-charts-community';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'; // Import dialog component
+import { formatDate } from '@angular/common'; // Import formatDate function
 
 @Component({
   selector: 'app-connection',
@@ -19,13 +20,16 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class ConnectionComponent implements OnInit {
   museClient: MuseClient;
   public chartOptions: AgCartesianChartOptions;
-  eegData: {
+  eegChart: {
     time: number;
     TP9: number;
     AF7: number;
     AF8: number;
     TP10: number;
   }[] = [];
+  eegData: any[] = [];
+  sessionId: number = 1; // Example session ID
+  deviceId: string = 'muse_device_1'; // Example device ID
   nis: number = 101;
   heartRate: number = 72;
   updateInterval: number = 10;
@@ -69,27 +73,64 @@ export class ConnectionComponent implements OnInit {
       this.museClient.eegReadings.subscribe((reading) => {
         const samples = reading.samples;
 
+        // Simulate the process of getting frequency bands (e.g., Delta, Theta, Alpha, etc.)
         if (Array.isArray(samples) && samples.length >= 4) {
-          const TP9 = samples[0];
-          const AF7 = samples[1];
-          const AF8 = samples[2];
-          const TP10 = samples[3];
+          const eegValue = {
+            Delta_TP9: this.calculateFrequency(samples[0], 'Delta'),
+            Delta_AF7: this.calculateFrequency(samples[1], 'Delta'),
+            Delta_AF8: this.calculateFrequency(samples[2], 'Delta'),
+            Delta_TP10: this.calculateFrequency(samples[3], 'Delta'),
+
+            Theta_TP9: this.calculateFrequency(samples[0], 'Theta'),
+            Theta_AF7: this.calculateFrequency(samples[1], 'Theta'),
+            Theta_AF8: this.calculateFrequency(samples[2], 'Theta'),
+            Theta_TP10: this.calculateFrequency(samples[3], 'Theta'),
+
+            Alpha_TP9: this.calculateFrequency(samples[0], 'Alpha'),
+            Alpha_AF7: this.calculateFrequency(samples[1], 'Alpha'),
+            Alpha_AF8: this.calculateFrequency(samples[2], 'Alpha'),
+            Alpha_TP10: this.calculateFrequency(samples[3], 'Alpha'),
+
+            Gamma_TP9: this.calculateFrequency(samples[0], 'Gamma'),
+            Gamma_AF7: this.calculateFrequency(samples[1], 'Gamma'),
+            Gamma_AF8: this.calculateFrequency(samples[2], 'Gamma'),
+            Gamma_TP10: this.calculateFrequency(samples[3], 'Gamma'),
+
+            Beta_TP9: this.calculateFrequency(samples[0], 'Beta'),
+            Beta_AF7: this.calculateFrequency(samples[1], 'Beta'),
+            Beta_AF8: this.calculateFrequency(samples[2], 'Beta'),
+            Beta_TP10: this.calculateFrequency(samples[3], 'Beta'),
+
+            RAW_TP9: samples[0],
+            RAW_AF7: samples[1],
+            RAW_AF8: samples[2],
+            RAW_TP10: samples[3],
+          };
 
           this.eegData.push({
-            time: timeIndex++,
-            TP9: TP9,
-            AF7: AF7,
-            AF8: AF8,
-            TP10: TP10,
+            timestamp: Date.now(),
+            eegValue,
           });
 
-          if (!this.updateIntervalId) {
-            this.startRealTimeUpdate();
-          }
-        } else {
-          console.error('Samples data is not in the expected format. Data:', samples);
+          const RAW_TP9 = samples[0];
+          const RAW_AF7 = samples[1];
+          const RAW_AF8 = samples[2];
+          const RAW_TP10 = samples[3];
+
+          this.eegChart.push({
+            time: timeIndex++,
+            TP9: RAW_TP9,
+            AF7: RAW_AF7,
+            AF8: RAW_AF8,
+            TP10: RAW_TP10,
+          });
         }
       });
+
+      // Send data to backend every 100ms
+      if (!this.updateIntervalId) {
+        this.startRealTimeUpdate();
+      };
     } catch (error) {
       console.error('Error connecting to Muse:', error);
     }
@@ -129,9 +170,9 @@ export class ConnectionComponent implements OnInit {
 
   startRealTimeUpdate(): void {
     this.updateIntervalId = setInterval(() => {
-      this.updateChartData();
 
       if (this.eegData.length > 0) {
+        this.updateChartData();
         this.sendDataToBackend();
       }
     }, this.updateInterval);
@@ -147,18 +188,36 @@ export class ConnectionComponent implements OnInit {
   updateChartData(): void {
     this.chartOptions = {
       ...this.chartOptions,
-      data: this.eegData.slice(-100),
+      data: [...this.eegChart.slice(-100)], // Gunakan salinan
     };
   }
 
+
+  calculateFrequency(sample: number, band: 'Delta' | 'Theta' | 'Alpha' | 'Beta' | 'Gamma'): number {
+    const frequencyMap: Record<string, number> = {
+      Delta: sample * 0.1,
+      Theta: sample * 0.2,
+      Alpha: sample * 0.3,
+      Beta: sample * 0.4,
+      Gamma: sample * 0.5,
+    };
+    return frequencyMap[band];
+  }
+
   sendDataToBackend(): void {
+    const timestamp = new Date(Date.now());
+    const formattedTimestamp = formatDate(timestamp, 'yyyy-MM-dd HH:mm:ss', 'en-US'); // Format the date
+
     this.http
       .post('http://localhost:3000/api/eeg-data', {
-        nis: this.nis,
-        eegValues: JSON.stringify(this.eegData),
+        sessionId: this.sessionId++,
+        deviceId: this.deviceId,
+        timestamp: formattedTimestamp,
+        eegValues: this.eegData,
       })
       .subscribe((response) => {
-        console.log('Data saved:', response);
+        console.log('Data sent successfully:', response);
+        this.eegData = []; // Clear the buffer after sending
       });
   }
 

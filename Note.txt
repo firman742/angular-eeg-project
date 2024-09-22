@@ -86,3 +86,38 @@ harusnya dalam 1 kali scan itu, membuat sebanyak 40 data dalam 1000ms -> karna t
 
 ==========
 Klasifikasi Tingkat Kesiapan: Setelah model dilatih, sinyal EEG baru dapat digunakan untuk mengklasifikasikan tingkat kesiapan belajar siswa. Misalnya, kesiapan tinggi (dominan Beta), kesiapan sedang (dominan Alpha), atau kesiapan rendah (dominan Theta).
+
+
+
+- eeg_signals
+id
+session_id
+device_id
+timestamp
+eeg_value (json)
+created_at
+
+untuk eeg_value nantinya berisikan row array berikut
+Delta_TP9	
+Delta_AF7
+Delta_AF8
+Delta_TP10
+Theta_TP9
+Theta_AF7
+Theta_AF8
+Theta_TP10
+Alpha_TP9
+Alpha_AF7
+Alpha_AF8
+Alpha_TP10
+Beta_TP9
+Beta_AF7
+Beta_AF8
+Beta_TP10
+Gamma_TP9
+Gamma_AF7
+Gamma_AF8
+Gamma_TP10
+RAW_TP9
+RAW_AF7
+RAW_AF8

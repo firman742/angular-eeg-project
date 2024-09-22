@@ -23,22 +23,19 @@ db.connect(err => {
   console.log('Connected to MySQL Database!');
 });
 
-// API untuk menerima data EEG dari frontend dan menyimpannya ke tabel eeg_signals
+// API untuk menerima data EEG dari frontend
 app.post('/api/eeg-data', (req, res) => {
-  const { nis, eegValues, sessionId } = req.body;
+  const { sessionId, deviceId, eegValues } = req.body;
 
-  const query = 'INSERT INTO eeg_signals (session_id, device_id, timestamp, channel, signal_value) VALUES ?';
+  const query = 'INSERT INTO eeg_signals (session_id, device_id, timestamp, eeg_values, created_at) VALUES ?';
 
-  const values = eegValues.map(eeg => [
+  const values = eegValues.map((eeg) => [
     sessionId,
-    eeg.device_id,
-    eeg.timestamp,
-    eeg.channel,
-    eeg.signal_value
+    deviceId,
+    new Date(),
+    JSON.stringify(eeg.eegValue), // Simpan sebagai JSON
+    new Date(),
   ]);
-
-  console.log(values);
-
 
   db.query(query, [values], (err, result) => {
     if (err) throw err;
