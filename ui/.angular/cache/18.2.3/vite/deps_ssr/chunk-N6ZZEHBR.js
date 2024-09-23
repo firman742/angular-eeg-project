@@ -1,11 +1,11 @@
+import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
   DOCUMENT,
   isPlatformBrowser
-} from "./chunk-3TXGYMGI.js";
+} from "./chunk-ODVGKJON.js";
 import {
   ANIMATION_MODULE_TYPE,
   APP_ID,
-  BehaviorSubject,
   CSP_NONCE,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -21,33 +21,21 @@ import {
   LOCALE_ID,
   NgModule,
   NgZone,
-  Observable,
   Optional,
   Output,
   PLATFORM_ID,
   QueryList,
-  Subject,
-  Subscription,
   Version,
   ViewChild,
   ViewEncapsulation$1,
   afterNextRender,
   booleanAttribute,
-  combineLatest,
-  concat,
-  debounceTime,
-  distinctUntilChanged,
-  filter,
+  effect,
   inject,
-  isObservable,
-  map,
-  of,
+  isSignal,
+  require_cjs,
+  require_operators,
   setClassMetadata,
-  skip,
-  startWith,
-  take,
-  takeUntil,
-  tap,
   ɵɵInputTransformsFeature,
   ɵɵNgOnChangesFeature,
   ɵɵProvidersFeature,
@@ -78,11 +66,12 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate1,
   ɵɵviewQuery
-} from "./chunk-TJAH653P.js";
+} from "./chunk-3S4MBNFB.js";
 import {
   __spreadProps,
-  __spreadValues
-} from "./chunk-DKPAFMVZ.js";
+  __spreadValues,
+  __toESM
+} from "./chunk-FQORKCB4.js";
 
 // node_modules/@angular/cdk/fesm2022/platform.mjs
 var hasV8BreakIterator;
@@ -302,12 +291,21 @@ function _isTestEnvironment() {
 }
 
 // node_modules/@angular/cdk/fesm2022/keycodes.mjs
+var TAB = 9;
 var ENTER = 13;
 var SHIFT = 16;
 var CONTROL = 17;
 var ALT = 18;
 var ESCAPE = 27;
 var SPACE = 32;
+var PAGE_UP = 33;
+var PAGE_DOWN = 34;
+var END = 35;
+var HOME = 36;
+var LEFT_ARROW = 37;
+var UP_ARROW = 38;
+var RIGHT_ARROW = 39;
+var DOWN_ARROW = 40;
 var ZERO = 48;
 var NINE = 57;
 var A = 65;
@@ -348,6 +346,8 @@ function coerceElement(elementOrRef) {
 }
 
 // node_modules/@angular/cdk/fesm2022/observers.mjs
+var import_rxjs = __toESM(require_cjs(), 1);
+var import_operators = __toESM(require_operators(), 1);
 function shouldIgnoreRecord(record) {
   if (record.type === "characterData" && record.target instanceof Comment) {
     return true;
@@ -400,9 +400,9 @@ var _ContentObserver = class _ContentObserver {
   }
   observe(elementOrRef) {
     const element = coerceElement(elementOrRef);
-    return new Observable((observer) => {
+    return new import_rxjs.Observable((observer) => {
       const stream = this._observeElement(element);
-      const subscription = stream.pipe(map((records) => records.filter((record) => !shouldIgnoreRecord(record))), filter((records) => !!records.length)).subscribe((records) => {
+      const subscription = stream.pipe((0, import_operators.map)((records) => records.filter((record) => !shouldIgnoreRecord(record))), (0, import_operators.filter)((records) => !!records.length)).subscribe((records) => {
         this._ngZone.run(() => {
           observer.next(records);
         });
@@ -420,7 +420,7 @@ var _ContentObserver = class _ContentObserver {
   _observeElement(element) {
     return this._ngZone.runOutsideAngular(() => {
       if (!this._observedElements.has(element)) {
-        const stream = new Subject();
+        const stream = new import_rxjs.Subject();
         const observer = this._mutationObserverFactory.create((mutations) => stream.next(mutations));
         if (observer) {
           observer.observe(element, {
@@ -524,7 +524,7 @@ var _CdkObserveContent = class _CdkObserveContent {
   _subscribe() {
     this._unsubscribe();
     const stream = this._contentObserver.observe(this._elementRef);
-    this._currentSubscription = (this.debounce ? stream.pipe(debounceTime(this.debounce)) : stream).subscribe(this.event);
+    this._currentSubscription = (this.debounce ? stream.pipe((0, import_operators.debounceTime)(this.debounce)) : stream).subscribe(this.event);
   }
   _unsubscribe() {
     this._currentSubscription?.unsubscribe();
@@ -602,15 +602,22 @@ var ObserversModule = _ObserversModule;
   }], null, null);
 })();
 
+// node_modules/@angular/cdk/fesm2022/a11y.mjs
+var import_rxjs4 = __toESM(require_cjs(), 1);
+var import_operators3 = __toESM(require_operators(), 1);
+
 // node_modules/@angular/cdk/fesm2022/coercion/private.mjs
+var import_rxjs2 = __toESM(require_cjs(), 1);
 function coerceObservable(data) {
-  if (!isObservable(data)) {
-    return of(data);
+  if (!(0, import_rxjs2.isObservable)(data)) {
+    return (0, import_rxjs2.of)(data);
   }
   return data;
 }
 
 // node_modules/@angular/cdk/fesm2022/layout.mjs
+var import_rxjs3 = __toESM(require_cjs(), 1);
+var import_operators2 = __toESM(require_operators(), 1);
 var _LayoutModule = class _LayoutModule {
 };
 _LayoutModule.ɵfac = function LayoutModule_Factory(__ngFactoryType__) {
@@ -715,7 +722,7 @@ var _BreakpointObserver = class _BreakpointObserver {
     this._mediaMatcher = _mediaMatcher;
     this._zone = _zone;
     this._queries = /* @__PURE__ */ new Map();
-    this._destroySubject = new Subject();
+    this._destroySubject = new import_rxjs3.Subject();
   }
   /** Completes the active subject, signalling to all other observables to complete. */
   ngOnDestroy() {
@@ -740,9 +747,9 @@ var _BreakpointObserver = class _BreakpointObserver {
   observe(value) {
     const queries = splitQueries(coerceArray(value));
     const observables = queries.map((query) => this._registerQuery(query).observable);
-    let stateObservable = combineLatest(observables);
-    stateObservable = concat(stateObservable.pipe(take(1)), stateObservable.pipe(skip(1), debounceTime(0)));
-    return stateObservable.pipe(map((breakpointStates) => {
+    let stateObservable = (0, import_rxjs3.combineLatest)(observables);
+    stateObservable = (0, import_rxjs3.concat)(stateObservable.pipe((0, import_operators2.take)(1)), stateObservable.pipe((0, import_operators2.skip)(1), (0, import_operators2.debounceTime)(0)));
+    return stateObservable.pipe((0, import_operators2.map)((breakpointStates) => {
       const response = {
         matches: false,
         breakpoints: {}
@@ -763,18 +770,18 @@ var _BreakpointObserver = class _BreakpointObserver {
       return this._queries.get(query);
     }
     const mql = this._mediaMatcher.matchMedia(query);
-    const queryObservable = new Observable((observer) => {
+    const queryObservable = new import_rxjs3.Observable((observer) => {
       const handler = (e) => this._zone.run(() => observer.next(e));
       mql.addListener(handler);
       return () => {
         mql.removeListener(handler);
       };
-    }).pipe(startWith(mql), map(({
+    }).pipe((0, import_operators2.startWith)(mql), (0, import_operators2.map)(({
       matches
     }) => ({
       query,
       matches
-    })), takeUntil(this._destroySubject));
+    })), (0, import_operators2.takeUntil)(this._destroySubject));
     const output = {
       observable: queryObservable,
       mql
@@ -1021,11 +1028,11 @@ function setMessageId(element, serviceId) {
 var DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS = 200;
 var Typeahead = class {
   constructor(initialItems, config) {
-    this._letterKeyStream = new Subject();
+    this._letterKeyStream = new import_rxjs4.Subject();
     this._items = [];
     this._selectedItemIndex = -1;
     this._pressedLetters = [];
-    this._selectedItem = new Subject();
+    this._selectedItem = new import_rxjs4.Subject();
     this.selectedItem = this._selectedItem;
     const typeAheadInterval = typeof config?.debounceInterval === "number" ? config.debounceInterval : DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL_MS;
     if (config?.skipPredicate) {
@@ -1065,7 +1072,7 @@ var Typeahead = class {
     this._pressedLetters = [];
   }
   _setupKeyHandler(typeAheadInterval) {
-    this._letterKeyStream.pipe(tap((letter) => this._pressedLetters.push(letter)), debounceTime(typeAheadInterval), filter(() => this._pressedLetters.length > 0), map(() => this._pressedLetters.join("").toLocaleUpperCase())).subscribe((inputString) => {
+    this._letterKeyStream.pipe((0, import_operators3.tap)((letter) => this._pressedLetters.push(letter)), (0, import_operators3.debounceTime)(typeAheadInterval), (0, import_operators3.filter)(() => this._pressedLetters.length > 0), (0, import_operators3.map)(() => this._pressedLetters.join("").toLocaleUpperCase())).subscribe((inputString) => {
       for (let i = 1; i < this._items.length + 1; i++) {
         const index = (this._selectedItemIndex + i) % this._items.length;
         const item = this._items[index];
@@ -1076,6 +1083,349 @@ var Typeahead = class {
       }
       this._pressedLetters = [];
     });
+  }
+};
+var ListKeyManager = class {
+  constructor(_items, injector) {
+    this._items = _items;
+    this._activeItemIndex = -1;
+    this._activeItem = null;
+    this._wrap = false;
+    this._typeaheadSubscription = import_rxjs4.Subscription.EMPTY;
+    this._vertical = true;
+    this._allowedModifierKeys = [];
+    this._homeAndEnd = false;
+    this._pageUpAndDown = {
+      enabled: false,
+      delta: 10
+    };
+    this._skipPredicateFn = (item) => item.disabled;
+    this.tabOut = new import_rxjs4.Subject();
+    this.change = new import_rxjs4.Subject();
+    if (_items instanceof QueryList) {
+      this._itemChangesSubscription = _items.changes.subscribe((newItems) => this._itemsChanged(newItems.toArray()));
+    } else if (isSignal(_items)) {
+      if (!injector && (typeof ngDevMode === "undefined" || ngDevMode)) {
+        throw new Error("ListKeyManager constructed with a signal must receive an injector");
+      }
+      this._effectRef = effect(() => this._itemsChanged(_items()), {
+        injector
+      });
+    }
+  }
+  /**
+   * Sets the predicate function that determines which items should be skipped by the
+   * list key manager.
+   * @param predicate Function that determines whether the given item should be skipped.
+   */
+  skipPredicate(predicate) {
+    this._skipPredicateFn = predicate;
+    return this;
+  }
+  /**
+   * Configures wrapping mode, which determines whether the active item will wrap to
+   * the other end of list when there are no more items in the given direction.
+   * @param shouldWrap Whether the list should wrap when reaching the end.
+   */
+  withWrap(shouldWrap = true) {
+    this._wrap = shouldWrap;
+    return this;
+  }
+  /**
+   * Configures whether the key manager should be able to move the selection vertically.
+   * @param enabled Whether vertical selection should be enabled.
+   */
+  withVerticalOrientation(enabled = true) {
+    this._vertical = enabled;
+    return this;
+  }
+  /**
+   * Configures the key manager to move the selection horizontally.
+   * Passing in `null` will disable horizontal movement.
+   * @param direction Direction in which the selection can be moved.
+   */
+  withHorizontalOrientation(direction) {
+    this._horizontal = direction;
+    return this;
+  }
+  /**
+   * Modifier keys which are allowed to be held down and whose default actions will be prevented
+   * as the user is pressing the arrow keys. Defaults to not allowing any modifier keys.
+   */
+  withAllowedModifierKeys(keys) {
+    this._allowedModifierKeys = keys;
+    return this;
+  }
+  /**
+   * Turns on typeahead mode which allows users to set the active item by typing.
+   * @param debounceInterval Time to wait after the last keystroke before setting the active item.
+   */
+  withTypeAhead(debounceInterval = 200) {
+    if (typeof ngDevMode === "undefined" || ngDevMode) {
+      const items2 = this._getItemsArray();
+      if (items2.length > 0 && items2.some((item) => typeof item.getLabel !== "function")) {
+        throw Error("ListKeyManager items in typeahead mode must implement the `getLabel` method.");
+      }
+    }
+    this._typeaheadSubscription.unsubscribe();
+    const items = this._getItemsArray();
+    this._typeahead = new Typeahead(items, {
+      debounceInterval: typeof debounceInterval === "number" ? debounceInterval : void 0,
+      skipPredicate: (item) => this._skipPredicateFn(item)
+    });
+    this._typeaheadSubscription = this._typeahead.selectedItem.subscribe((item) => {
+      this.setActiveItem(item);
+    });
+    return this;
+  }
+  /** Cancels the current typeahead sequence. */
+  cancelTypeahead() {
+    this._typeahead?.reset();
+    return this;
+  }
+  /**
+   * Configures the key manager to activate the first and last items
+   * respectively when the Home or End key is pressed.
+   * @param enabled Whether pressing the Home or End key activates the first/last item.
+   */
+  withHomeAndEnd(enabled = true) {
+    this._homeAndEnd = enabled;
+    return this;
+  }
+  /**
+   * Configures the key manager to activate every 10th, configured or first/last element in up/down direction
+   * respectively when the Page-Up or Page-Down key is pressed.
+   * @param enabled Whether pressing the Page-Up or Page-Down key activates the first/last item.
+   * @param delta Whether pressing the Home or End key activates the first/last item.
+   */
+  withPageUpDown(enabled = true, delta = 10) {
+    this._pageUpAndDown = {
+      enabled,
+      delta
+    };
+    return this;
+  }
+  setActiveItem(item) {
+    const previousActiveItem = this._activeItem;
+    this.updateActiveItem(item);
+    if (this._activeItem !== previousActiveItem) {
+      this.change.next(this._activeItemIndex);
+    }
+  }
+  /**
+   * Sets the active item depending on the key event passed in.
+   * @param event Keyboard event to be used for determining which element should be active.
+   */
+  onKeydown(event) {
+    const keyCode = event.keyCode;
+    const modifiers = ["altKey", "ctrlKey", "metaKey", "shiftKey"];
+    const isModifierAllowed = modifiers.every((modifier) => {
+      return !event[modifier] || this._allowedModifierKeys.indexOf(modifier) > -1;
+    });
+    switch (keyCode) {
+      case TAB:
+        this.tabOut.next();
+        return;
+      case DOWN_ARROW:
+        if (this._vertical && isModifierAllowed) {
+          this.setNextItemActive();
+          break;
+        } else {
+          return;
+        }
+      case UP_ARROW:
+        if (this._vertical && isModifierAllowed) {
+          this.setPreviousItemActive();
+          break;
+        } else {
+          return;
+        }
+      case RIGHT_ARROW:
+        if (this._horizontal && isModifierAllowed) {
+          this._horizontal === "rtl" ? this.setPreviousItemActive() : this.setNextItemActive();
+          break;
+        } else {
+          return;
+        }
+      case LEFT_ARROW:
+        if (this._horizontal && isModifierAllowed) {
+          this._horizontal === "rtl" ? this.setNextItemActive() : this.setPreviousItemActive();
+          break;
+        } else {
+          return;
+        }
+      case HOME:
+        if (this._homeAndEnd && isModifierAllowed) {
+          this.setFirstItemActive();
+          break;
+        } else {
+          return;
+        }
+      case END:
+        if (this._homeAndEnd && isModifierAllowed) {
+          this.setLastItemActive();
+          break;
+        } else {
+          return;
+        }
+      case PAGE_UP:
+        if (this._pageUpAndDown.enabled && isModifierAllowed) {
+          const targetIndex = this._activeItemIndex - this._pageUpAndDown.delta;
+          this._setActiveItemByIndex(targetIndex > 0 ? targetIndex : 0, 1);
+          break;
+        } else {
+          return;
+        }
+      case PAGE_DOWN:
+        if (this._pageUpAndDown.enabled && isModifierAllowed) {
+          const targetIndex = this._activeItemIndex + this._pageUpAndDown.delta;
+          const itemsLength = this._getItemsArray().length;
+          this._setActiveItemByIndex(targetIndex < itemsLength ? targetIndex : itemsLength - 1, -1);
+          break;
+        } else {
+          return;
+        }
+      default:
+        if (isModifierAllowed || hasModifierKey(event, "shiftKey")) {
+          this._typeahead?.handleKey(event);
+        }
+        return;
+    }
+    this._typeahead?.reset();
+    event.preventDefault();
+  }
+  /** Index of the currently active item. */
+  get activeItemIndex() {
+    return this._activeItemIndex;
+  }
+  /** The active item. */
+  get activeItem() {
+    return this._activeItem;
+  }
+  /** Gets whether the user is currently typing into the manager using the typeahead feature. */
+  isTyping() {
+    return !!this._typeahead && this._typeahead.isTyping();
+  }
+  /** Sets the active item to the first enabled item in the list. */
+  setFirstItemActive() {
+    this._setActiveItemByIndex(0, 1);
+  }
+  /** Sets the active item to the last enabled item in the list. */
+  setLastItemActive() {
+    this._setActiveItemByIndex(this._getItemsArray().length - 1, -1);
+  }
+  /** Sets the active item to the next enabled item in the list. */
+  setNextItemActive() {
+    this._activeItemIndex < 0 ? this.setFirstItemActive() : this._setActiveItemByDelta(1);
+  }
+  /** Sets the active item to a previous enabled item in the list. */
+  setPreviousItemActive() {
+    this._activeItemIndex < 0 && this._wrap ? this.setLastItemActive() : this._setActiveItemByDelta(-1);
+  }
+  updateActiveItem(item) {
+    const itemArray = this._getItemsArray();
+    const index = typeof item === "number" ? item : itemArray.indexOf(item);
+    const activeItem = itemArray[index];
+    this._activeItem = activeItem == null ? null : activeItem;
+    this._activeItemIndex = index;
+    this._typeahead?.setCurrentSelectedItemIndex(index);
+  }
+  /** Cleans up the key manager. */
+  destroy() {
+    this._typeaheadSubscription.unsubscribe();
+    this._itemChangesSubscription?.unsubscribe();
+    this._effectRef?.destroy();
+    this._typeahead?.destroy();
+    this.tabOut.complete();
+    this.change.complete();
+  }
+  /**
+   * This method sets the active item, given a list of items and the delta between the
+   * currently active item and the new active item. It will calculate differently
+   * depending on whether wrap mode is turned on.
+   */
+  _setActiveItemByDelta(delta) {
+    this._wrap ? this._setActiveInWrapMode(delta) : this._setActiveInDefaultMode(delta);
+  }
+  /**
+   * Sets the active item properly given "wrap" mode. In other words, it will continue to move
+   * down the list until it finds an item that is not disabled, and it will wrap if it
+   * encounters either end of the list.
+   */
+  _setActiveInWrapMode(delta) {
+    const items = this._getItemsArray();
+    for (let i = 1; i <= items.length; i++) {
+      const index = (this._activeItemIndex + delta * i + items.length) % items.length;
+      const item = items[index];
+      if (!this._skipPredicateFn(item)) {
+        this.setActiveItem(index);
+        return;
+      }
+    }
+  }
+  /**
+   * Sets the active item properly given the default mode. In other words, it will
+   * continue to move down the list until it finds an item that is not disabled. If
+   * it encounters either end of the list, it will stop and not wrap.
+   */
+  _setActiveInDefaultMode(delta) {
+    this._setActiveItemByIndex(this._activeItemIndex + delta, delta);
+  }
+  /**
+   * Sets the active item to the first enabled item starting at the index specified. If the
+   * item is disabled, it will move in the fallbackDelta direction until it either
+   * finds an enabled item or encounters the end of the list.
+   */
+  _setActiveItemByIndex(index, fallbackDelta) {
+    const items = this._getItemsArray();
+    if (!items[index]) {
+      return;
+    }
+    while (this._skipPredicateFn(items[index])) {
+      index += fallbackDelta;
+      if (!items[index]) {
+        return;
+      }
+    }
+    this.setActiveItem(index);
+  }
+  /** Returns the items as an array. */
+  _getItemsArray() {
+    if (isSignal(this._items)) {
+      return this._items();
+    }
+    return this._items instanceof QueryList ? this._items.toArray() : this._items;
+  }
+  /** Callback for when the items have changed. */
+  _itemsChanged(newItems) {
+    this._typeahead?.setItems(newItems);
+    if (this._activeItem) {
+      const newIndex = newItems.indexOf(this._activeItem);
+      if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+        this._activeItemIndex = newIndex;
+        this._typeahead?.setCurrentSelectedItemIndex(newIndex);
+      }
+    }
+  }
+};
+var FocusKeyManager = class extends ListKeyManager {
+  constructor() {
+    super(...arguments);
+    this._origin = "program";
+  }
+  /**
+   * Sets the focus origin that will be passed in to the items for any subsequent `focus` calls.
+   * @param origin Focus origin to be used when focusing items.
+   */
+  setFocusOrigin(origin) {
+    this._origin = origin;
+    return this;
+  }
+  setActiveItem(item) {
+    super.setActiveItem(item);
+    if (this.activeItem) {
+      this.activeItem.focus(this._origin);
+    }
   }
 };
 var TreeKeyManager = class {
@@ -1118,9 +1468,9 @@ var TreeKeyManager = class {
     this._skipPredicateFn = (_item) => false;
     this._trackByFn = (item) => item;
     this._items = [];
-    this._typeaheadSubscription = Subscription.EMPTY;
+    this._typeaheadSubscription = import_rxjs4.Subscription.EMPTY;
     this._hasInitialFocused = false;
-    this.change = new Subject();
+    this.change = new import_rxjs4.Subject();
     if (items instanceof QueryList) {
       this._items = items.toArray();
       items.changes.subscribe((newItems) => {
@@ -1129,7 +1479,7 @@ var TreeKeyManager = class {
         this._updateActiveItemIndex(this._items);
         this._initializeFocus();
       });
-    } else if (isObservable(items)) {
+    } else if ((0, import_rxjs4.isObservable)(items)) {
       items.subscribe((newItems) => {
         this._items = newItems;
         this._typeahead?.setItems(newItems);
@@ -1314,7 +1664,7 @@ var TreeKeyManager = class {
     if (!this._isCurrentItemExpanded()) {
       this._activeItem.expand();
     } else {
-      coerceObservable(this._activeItem.getChildren()).pipe(take(1)).subscribe((children) => {
+      coerceObservable(this._activeItem.getChildren()).pipe((0, import_operators3.take)(1)).subscribe((children) => {
         const firstChild = children.find((child) => !this._skipPredicateFn(child));
         if (!firstChild) {
           return;
@@ -1340,11 +1690,11 @@ var TreeKeyManager = class {
     const parent = this._activeItem.getParent();
     let itemsToExpand;
     if (!parent) {
-      itemsToExpand = of(this._items.filter((item) => item.getParent() === null));
+      itemsToExpand = (0, import_rxjs4.of)(this._items.filter((item) => item.getParent() === null));
     } else {
       itemsToExpand = coerceObservable(parent.getChildren());
     }
-    itemsToExpand.pipe(take(1)).subscribe((items) => {
+    itemsToExpand.pipe((0, import_operators3.take)(1)).subscribe((items) => {
       for (const item of items) {
         item.expand();
       }
@@ -2109,7 +2459,7 @@ var _InputModalityDetector = class _InputModalityDetector {
   constructor(_platform, ngZone, document2, options) {
     this._platform = _platform;
     this._mostRecentTarget = null;
-    this._modality = new BehaviorSubject(null);
+    this._modality = new import_rxjs4.BehaviorSubject(null);
     this._lastTouchMs = 0;
     this._onKeydown = (event) => {
       if (this._options?.ignoreKeys?.some((keyCode) => keyCode === event.keyCode)) {
@@ -2135,8 +2485,8 @@ var _InputModalityDetector = class _InputModalityDetector {
       this._mostRecentTarget = _getEventTarget(event);
     };
     this._options = __spreadValues(__spreadValues({}, INPUT_MODALITY_DETECTOR_DEFAULT_OPTIONS), options);
-    this.modalityDetected = this._modality.pipe(skip(1));
-    this.modalityChanged = this.modalityDetected.pipe(distinctUntilChanged());
+    this.modalityDetected = this._modality.pipe((0, import_operators3.skip)(1));
+    this.modalityChanged = this.modalityDetected.pipe((0, import_operators3.distinctUntilChanged)());
     if (_platform.isBrowser) {
       ngZone.runOutsideAngular(() => {
         document2.addEventListener("keydown", this._onKeydown, modalityEventListenerOptions);
@@ -2436,7 +2786,7 @@ var _FocusMonitor = class _FocusMonitor {
       this._windowFocused = true;
       this._windowFocusTimeoutId = window.setTimeout(() => this._windowFocused = false);
     };
-    this._stopInputModalityDetector = new Subject();
+    this._stopInputModalityDetector = new import_rxjs4.Subject();
     this._rootNodeFocusAndBlurListener = (event) => {
       const target = _getEventTarget(event);
       for (let element = target; element; element = element.parentElement) {
@@ -2453,7 +2803,7 @@ var _FocusMonitor = class _FocusMonitor {
   monitor(element, checkChildren = false) {
     const nativeElement = coerceElement(element);
     if (!this._platform.isBrowser || nativeElement.nodeType !== 1) {
-      return of();
+      return (0, import_rxjs4.of)();
     }
     const rootNode = _getShadowRoot(nativeElement) || this._getDocument();
     const cachedInfo = this._elementInfo.get(nativeElement);
@@ -2465,7 +2815,7 @@ var _FocusMonitor = class _FocusMonitor {
     }
     const info = {
       checkChildren,
-      subject: new Subject(),
+      subject: new import_rxjs4.Subject(),
       rootNode
     };
     this._elementInfo.set(nativeElement, info);
@@ -2612,7 +2962,7 @@ var _FocusMonitor = class _FocusMonitor {
         const window2 = this._getWindow();
         window2.addEventListener("focus", this._windowFocusListener);
       });
-      this._inputModalityDetector.modalityDetected.pipe(takeUntil(this._stopInputModalityDetector)).subscribe((modality) => {
+      this._inputModalityDetector.modalityDetected.pipe((0, import_operators3.takeUntil)(this._stopInputModalityDetector)).subscribe((modality) => {
         this._setOrigin(
           modality,
           true
@@ -3057,6 +3407,8 @@ var BidiModule = _BidiModule;
 var VERSION = new Version("18.2.3");
 
 // node_modules/@angular/material/fesm2022/core.mjs
+var import_rxjs5 = __toESM(require_cjs(), 1);
+var import_operators4 = __toESM(require_operators(), 1);
 var _c0 = ["*", [["mat-option"], ["ng-container"]]];
 var _c1 = ["*", "mat-option, ng-container"];
 var _c2 = ["text"];
@@ -3241,7 +3593,7 @@ function MAT_DATE_LOCALE_FACTORY() {
 }
 var DateAdapter = class {
   constructor() {
-    this._localeChanges = new Subject();
+    this._localeChanges = new import_rxjs5.Subject();
     this.localeChanges = this._localeChanges;
   }
   /**
@@ -4462,7 +4814,7 @@ var _MatOption = class _MatOption {
     this._mostRecentViewValue = "";
     this.id = `mat-option-${_uniqueIdCounter++}`;
     this.onSelectionChange = new EventEmitter();
-    this._stateChanges = new Subject();
+    this._stateChanges = new import_rxjs5.Subject();
   }
   /**
    * Whether or not the option is currently active and ready to be selected.
@@ -4992,14 +5344,19 @@ export {
   _getFocusedElementPierceShadowDom,
   _getEventTarget,
   _isTestEnvironment,
+  ENTER,
   ESCAPE,
+  SPACE,
+  A,
   hasModifierKey,
   coerceBooleanProperty,
   coerceNumberProperty,
   coerceArray,
   coerceCssPixelValue,
   coerceElement,
+  CdkObserveContent,
   ObserversModule,
+  FocusKeyManager,
   InteractivityChecker,
   FocusTrapFactory,
   FocusMonitor,
@@ -5009,7 +5366,10 @@ export {
   MatCommonModule,
   _ErrorStateTracker,
   ErrorStateMatcher,
+  RippleRenderer,
+  MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRippleModule,
+  MatPseudoCheckboxModule,
   MatRippleLoader
 };
-//# sourceMappingURL=chunk-4DSPXMAM.js.map
+//# sourceMappingURL=chunk-N6ZZEHBR.js.map

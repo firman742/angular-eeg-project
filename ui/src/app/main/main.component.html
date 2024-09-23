@@ -1,7 +1,27 @@
-<!-- app.component.html -->
 <div class="main">
   <h1>Petaotak.com</h1>
   <div class="button-container">
-    <a mat-flat-button href="/connection" >Connect</a>
+    <a mat-flat-button href="/connection">Connect</a>
   </div>
+
+  <mat-card appearance="outlined" style="width: 1000px">
+    <mat-card-header>
+      <h4>Riwayat:</h4>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item *ngFor="let item of items; let i = index">
+          <div>{{ item.name }}</div>
+          <div class="time">{{ item.time }}</div>
+          <button mat-icon-button (click)="viewDetails(item)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteItem(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
 </div>

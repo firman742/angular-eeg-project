@@ -1,5 +1,11 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
+  ArrayDataSource,
+  _RecycleViewRepeaterStrategy,
+  _VIEW_REPEATER_STRATEGY,
+  isDataSource
+} from "./chunk-LZLHY2TH.js";
+import {
   animate,
   animateChild,
   group,
@@ -30,7 +36,7 @@ import {
   getRtlScrollAxisType,
   hasModifierKey,
   supportsScrollBehavior
-} from "./chunk-JH3YXQYE.js";
+} from "./chunk-N6ZZEHBR.js";
 import {
   DOCUMENT,
   Location
@@ -107,170 +113,8 @@ import {
 } from "./chunk-FQORKCB4.js";
 
 // node_modules/@angular/cdk/fesm2022/scrolling.mjs
-var import_rxjs2 = __toESM(require_cjs(), 1);
-var import_operators = __toESM(require_operators(), 1);
-
-// node_modules/@angular/cdk/fesm2022/collections.mjs
 var import_rxjs = __toESM(require_cjs(), 1);
-var DataSource = class {
-};
-function isDataSource(value) {
-  return value && typeof value.connect === "function" && !(value instanceof import_rxjs.ConnectableObservable);
-}
-var ArrayDataSource = class extends DataSource {
-  constructor(_data) {
-    super();
-    this._data = _data;
-  }
-  connect() {
-    return (0, import_rxjs.isObservable)(this._data) ? this._data : (0, import_rxjs.of)(this._data);
-  }
-  disconnect() {
-  }
-};
-var _ViewRepeaterOperation;
-(function(_ViewRepeaterOperation2) {
-  _ViewRepeaterOperation2[_ViewRepeaterOperation2["REPLACED"] = 0] = "REPLACED";
-  _ViewRepeaterOperation2[_ViewRepeaterOperation2["INSERTED"] = 1] = "INSERTED";
-  _ViewRepeaterOperation2[_ViewRepeaterOperation2["MOVED"] = 2] = "MOVED";
-  _ViewRepeaterOperation2[_ViewRepeaterOperation2["REMOVED"] = 3] = "REMOVED";
-})(_ViewRepeaterOperation || (_ViewRepeaterOperation = {}));
-var _VIEW_REPEATER_STRATEGY = new InjectionToken("_ViewRepeater");
-var _RecycleViewRepeaterStrategy = class {
-  constructor() {
-    this.viewCacheSize = 20;
-    this._viewCache = [];
-  }
-  /** Apply changes to the DOM. */
-  applyChanges(changes, viewContainerRef, itemContextFactory, itemValueResolver, itemViewChanged) {
-    changes.forEachOperation((record, adjustedPreviousIndex, currentIndex) => {
-      let view;
-      let operation;
-      if (record.previousIndex == null) {
-        const viewArgsFactory = () => itemContextFactory(record, adjustedPreviousIndex, currentIndex);
-        view = this._insertView(viewArgsFactory, currentIndex, viewContainerRef, itemValueResolver(record));
-        operation = view ? _ViewRepeaterOperation.INSERTED : _ViewRepeaterOperation.REPLACED;
-      } else if (currentIndex == null) {
-        this._detachAndCacheView(adjustedPreviousIndex, viewContainerRef);
-        operation = _ViewRepeaterOperation.REMOVED;
-      } else {
-        view = this._moveView(adjustedPreviousIndex, currentIndex, viewContainerRef, itemValueResolver(record));
-        operation = _ViewRepeaterOperation.MOVED;
-      }
-      if (itemViewChanged) {
-        itemViewChanged({
-          context: view?.context,
-          operation,
-          record
-        });
-      }
-    });
-  }
-  detach() {
-    for (const view of this._viewCache) {
-      view.destroy();
-    }
-    this._viewCache = [];
-  }
-  /**
-   * Inserts a view for a new item, either from the cache or by creating a new
-   * one. Returns `undefined` if the item was inserted into a cached view.
-   */
-  _insertView(viewArgsFactory, currentIndex, viewContainerRef, value) {
-    const cachedView = this._insertViewFromCache(currentIndex, viewContainerRef);
-    if (cachedView) {
-      cachedView.context.$implicit = value;
-      return void 0;
-    }
-    const viewArgs = viewArgsFactory();
-    return viewContainerRef.createEmbeddedView(viewArgs.templateRef, viewArgs.context, viewArgs.index);
-  }
-  /** Detaches the view at the given index and inserts into the view cache. */
-  _detachAndCacheView(index, viewContainerRef) {
-    const detachedView = viewContainerRef.detach(index);
-    this._maybeCacheView(detachedView, viewContainerRef);
-  }
-  /** Moves view at the previous index to the current index. */
-  _moveView(adjustedPreviousIndex, currentIndex, viewContainerRef, value) {
-    const view = viewContainerRef.get(adjustedPreviousIndex);
-    viewContainerRef.move(view, currentIndex);
-    view.context.$implicit = value;
-    return view;
-  }
-  /**
-   * Cache the given detached view. If the cache is full, the view will be
-   * destroyed.
-   */
-  _maybeCacheView(view, viewContainerRef) {
-    if (this._viewCache.length < this.viewCacheSize) {
-      this._viewCache.push(view);
-    } else {
-      const index = viewContainerRef.indexOf(view);
-      if (index === -1) {
-        view.destroy();
-      } else {
-        viewContainerRef.remove(index);
-      }
-    }
-  }
-  /** Inserts a recycled view from the cache at the given index. */
-  _insertViewFromCache(index, viewContainerRef) {
-    const cachedView = this._viewCache.pop();
-    if (cachedView) {
-      viewContainerRef.insert(cachedView, index);
-    }
-    return cachedView || null;
-  }
-};
-var _UniqueSelectionDispatcher = class _UniqueSelectionDispatcher {
-  constructor() {
-    this._listeners = [];
-  }
-  /**
-   * Notify other items that selection for the given name has been set.
-   * @param id ID of the item.
-   * @param name Name of the item.
-   */
-  notify(id, name) {
-    for (let listener of this._listeners) {
-      listener(id, name);
-    }
-  }
-  /**
-   * Listen for future changes to item selection.
-   * @return Function used to deregister listener
-   */
-  listen(listener) {
-    this._listeners.push(listener);
-    return () => {
-      this._listeners = this._listeners.filter((registered) => {
-        return listener !== registered;
-      });
-    };
-  }
-  ngOnDestroy() {
-    this._listeners = [];
-  }
-};
-_UniqueSelectionDispatcher.ɵfac = function UniqueSelectionDispatcher_Factory(__ngFactoryType__) {
-  return new (__ngFactoryType__ || _UniqueSelectionDispatcher)();
-};
-_UniqueSelectionDispatcher.ɵprov = ɵɵdefineInjectable({
-  token: _UniqueSelectionDispatcher,
-  factory: _UniqueSelectionDispatcher.ɵfac,
-  providedIn: "root"
-});
-var UniqueSelectionDispatcher = _UniqueSelectionDispatcher;
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(UniqueSelectionDispatcher, [{
-    type: Injectable,
-    args: [{
-      providedIn: "root"
-    }]
-  }], null, null);
-})();
-
-// node_modules/@angular/cdk/fesm2022/scrolling.mjs
+var import_operators = __toESM(require_operators(), 1);
 var _c0 = ["contentWrapper"];
 var _c1 = ["*"];
 var VIRTUAL_SCROLL_STRATEGY = new InjectionToken("VIRTUAL_SCROLL_STRATEGY");
@@ -281,7 +125,7 @@ var FixedSizeVirtualScrollStrategy = class {
    * @param maxBufferPx The amount of buffer (in pixels) to render when rendering more.
    */
   constructor(itemSize, minBufferPx, maxBufferPx) {
-    this._scrolledIndexChange = new import_rxjs2.Subject();
+    this._scrolledIndexChange = new import_rxjs.Subject();
     this.scrolledIndexChange = this._scrolledIndexChange.pipe((0, import_operators.distinctUntilChanged)());
     this._viewport = null;
     this._itemSize = itemSize;
@@ -482,7 +326,7 @@ var _ScrollDispatcher = class _ScrollDispatcher {
   constructor(_ngZone, _platform, document2) {
     this._ngZone = _ngZone;
     this._platform = _platform;
-    this._scrolled = new import_rxjs2.Subject();
+    this._scrolled = new import_rxjs.Subject();
     this._globalSubscription = null;
     this._scrolledCount = 0;
     this.scrollContainers = /* @__PURE__ */ new Map();
@@ -521,9 +365,9 @@ var _ScrollDispatcher = class _ScrollDispatcher {
    */
   scrolled(auditTimeInMs = DEFAULT_SCROLL_TIME) {
     if (!this._platform.isBrowser) {
-      return (0, import_rxjs2.of)();
+      return (0, import_rxjs.of)();
     }
-    return new import_rxjs2.Observable((observer) => {
+    return new import_rxjs.Observable((observer) => {
       if (!this._globalSubscription) {
         this._addGlobalListener();
       }
@@ -584,7 +428,7 @@ var _ScrollDispatcher = class _ScrollDispatcher {
   _addGlobalListener() {
     this._globalSubscription = this._ngZone.runOutsideAngular(() => {
       const window2 = this._getWindow();
-      return (0, import_rxjs2.fromEvent)(window2.document, "scroll").subscribe(() => this._scrolled.next());
+      return (0, import_rxjs.fromEvent)(window2.document, "scroll").subscribe(() => this._scrolled.next());
     });
   }
   /** Cleans up the global scroll listener. */
@@ -630,8 +474,8 @@ var _CdkScrollable = class _CdkScrollable {
     this.scrollDispatcher = scrollDispatcher;
     this.ngZone = ngZone;
     this.dir = dir;
-    this._destroyed = new import_rxjs2.Subject();
-    this._elementScrolled = new import_rxjs2.Observable((observer) => this.ngZone.runOutsideAngular(() => (0, import_rxjs2.fromEvent)(this.elementRef.nativeElement, "scroll").pipe((0, import_operators.takeUntil)(this._destroyed)).subscribe(observer)));
+    this._destroyed = new import_rxjs.Subject();
+    this._elementScrolled = new import_rxjs.Observable((observer) => this.ngZone.runOutsideAngular(() => (0, import_rxjs.fromEvent)(this.elementRef.nativeElement, "scroll").pipe((0, import_operators.takeUntil)(this._destroyed)).subscribe(observer)));
   }
   ngOnInit() {
     this.scrollDispatcher.register(this);
@@ -777,7 +621,7 @@ var DEFAULT_RESIZE_TIME = 20;
 var _ViewportRuler = class _ViewportRuler {
   constructor(_platform, ngZone, document2) {
     this._platform = _platform;
-    this._change = new import_rxjs2.Subject();
+    this._change = new import_rxjs.Subject();
     this._changeListener = (event) => {
       this._change.next(event);
     };
@@ -943,7 +787,7 @@ var CdkVirtualScrollable = _CdkVirtualScrollable;
 function rangesEqual(r1, r2) {
   return r1.start == r2.start && r1.end == r2.end;
 }
-var SCROLL_SCHEDULER = typeof requestAnimationFrame !== "undefined" ? import_rxjs2.animationFrameScheduler : import_rxjs2.asapScheduler;
+var SCROLL_SCHEDULER = typeof requestAnimationFrame !== "undefined" ? import_rxjs.animationFrameScheduler : import_rxjs.asapScheduler;
 var _CdkVirtualScrollViewport = class _CdkVirtualScrollViewport extends CdkVirtualScrollable {
   /** The direction the viewport scrolls. */
   get orientation() {
@@ -962,11 +806,11 @@ var _CdkVirtualScrollViewport = class _CdkVirtualScrollViewport extends CdkVirtu
     this._scrollStrategy = _scrollStrategy;
     this.scrollable = scrollable;
     this._platform = inject(Platform);
-    this._detachedSubject = new import_rxjs2.Subject();
-    this._renderedRangeSubject = new import_rxjs2.Subject();
+    this._detachedSubject = new import_rxjs.Subject();
+    this._renderedRangeSubject = new import_rxjs.Subject();
     this._orientation = "vertical";
     this.appendOnly = false;
-    this.scrolledIndexChange = new import_rxjs2.Observable((observer) => this._scrollStrategy.scrolledIndexChange.subscribe((index) => Promise.resolve().then(() => this.ngZone.run(() => observer.next(index)))));
+    this.scrolledIndexChange = new import_rxjs.Observable((observer) => this._scrollStrategy.scrolledIndexChange.subscribe((index) => Promise.resolve().then(() => this.ngZone.run(() => observer.next(index)))));
     this.renderedRangeStream = this._renderedRangeSubject;
     this._totalContentSize = 0;
     this._totalContentWidth = "";
@@ -981,7 +825,7 @@ var _CdkVirtualScrollViewport = class _CdkVirtualScrollViewport extends CdkVirtu
     this._renderedContentOffsetNeedsRewrite = false;
     this._isChangeDetectionPending = false;
     this._runAfterChangeDetection = [];
-    this._viewportChanges = import_rxjs2.Subscription.EMPTY;
+    this._viewportChanges = import_rxjs.Subscription.EMPTY;
     this._injector = inject(Injector);
     this._isDestroyed = false;
     if (!_scrollStrategy && (typeof ngDevMode === "undefined" || ngDevMode)) {
@@ -1404,7 +1248,7 @@ var _CdkVirtualForOf = class _CdkVirtualForOf {
     if (isDataSource(value)) {
       this._dataSourceChanges.next(value);
     } else {
-      this._dataSourceChanges.next(new ArrayDataSource((0, import_rxjs2.isObservable)(value) ? value : Array.from(value || [])));
+      this._dataSourceChanges.next(new ArrayDataSource((0, import_rxjs.isObservable)(value) ? value : Array.from(value || [])));
     }
   }
   /**
@@ -1441,8 +1285,8 @@ var _CdkVirtualForOf = class _CdkVirtualForOf {
     this._differs = _differs;
     this._viewRepeater = _viewRepeater;
     this._viewport = _viewport;
-    this.viewChange = new import_rxjs2.Subject();
-    this._dataSourceChanges = new import_rxjs2.Subject();
+    this.viewChange = new import_rxjs.Subject();
+    this._dataSourceChanges = new import_rxjs.Subject();
     this.dataStream = this._dataSourceChanges.pipe(
       // Start off with null `DataSource`.
       (0, import_operators.startWith)(null),
@@ -1457,7 +1301,7 @@ var _CdkVirtualForOf = class _CdkVirtualForOf {
     );
     this._differ = null;
     this._needsUpdate = false;
-    this._destroyed = new import_rxjs2.Subject();
+    this._destroyed = new import_rxjs.Subject();
     this.dataStream.subscribe((data) => {
       this._data = data;
       this._onRenderedDataChange();
@@ -1542,7 +1386,7 @@ var _CdkVirtualForOf = class _CdkVirtualForOf {
       oldDs.disconnect(this);
     }
     this._needsUpdate = true;
-    return newDs ? newDs.connect(this) : (0, import_rxjs2.of)();
+    return newDs ? newDs.connect(this) : (0, import_rxjs.of)();
   }
   /** Update the `CdkVirtualForOfContext` for all views. */
   _updateContext() {
@@ -1714,7 +1558,7 @@ var CdkVirtualScrollableElement = _CdkVirtualScrollableElement;
 var _CdkVirtualScrollableWindow = class _CdkVirtualScrollableWindow extends CdkVirtualScrollable {
   constructor(scrollDispatcher, ngZone, dir) {
     super(new ElementRef(document.documentElement), scrollDispatcher, ngZone, dir);
-    this._elementScrolled = new import_rxjs2.Observable((observer) => this.ngZone.runOutsideAngular(() => (0, import_rxjs2.fromEvent)(document, "scroll").pipe((0, import_operators.takeUntil)(this._destroyed)).subscribe(observer)));
+    this._elementScrolled = new import_rxjs.Observable((observer) => this.ngZone.runOutsideAngular(() => (0, import_rxjs.fromEvent)(document, "scroll").pipe((0, import_operators.takeUntil)(this._destroyed)).subscribe(observer)));
   }
   measureBoundingClientRectWithScrollOffset(from) {
     return this.getElementRef().nativeElement.getBoundingClientRect()[from];
@@ -2334,7 +2178,7 @@ var PortalModule = _PortalModule;
 })();
 
 // node_modules/@angular/cdk/fesm2022/overlay.mjs
-var import_rxjs3 = __toESM(require_cjs(), 1);
+var import_rxjs2 = __toESM(require_cjs(), 1);
 var scrollBehaviorSupported = supportsScrollBehavior();
 var BlockScrollStrategy = class {
   constructor(_viewportRuler, document2) {
@@ -2919,17 +2763,17 @@ var OverlayRef = class {
     this._animationsDisabled = _animationsDisabled;
     this._injector = _injector;
     this._backdropElement = null;
-    this._backdropClick = new import_rxjs3.Subject();
-    this._attachments = new import_rxjs3.Subject();
-    this._detachments = new import_rxjs3.Subject();
-    this._locationChanges = import_rxjs3.Subscription.EMPTY;
+    this._backdropClick = new import_rxjs2.Subject();
+    this._attachments = new import_rxjs2.Subject();
+    this._detachments = new import_rxjs2.Subject();
+    this._locationChanges = import_rxjs2.Subscription.EMPTY;
     this._backdropClickHandler = (event) => this._backdropClick.next(event);
     this._backdropTransitionendHandler = (event) => {
       this._disposeBackdrop(event.target);
     };
-    this._keydownEvents = new import_rxjs3.Subject();
-    this._outsidePointerEvents = new import_rxjs3.Subject();
-    this._renders = new import_rxjs3.Subject();
+    this._keydownEvents = new import_rxjs2.Subject();
+    this._outsidePointerEvents = new import_rxjs2.Subject();
+    this._renders = new import_rxjs2.Subject();
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
       this._scrollStrategy.attach(this);
@@ -3237,7 +3081,7 @@ var OverlayRef = class {
   /** Detaches the overlay content next time the zone stabilizes. */
   _detachContentWhenEmpty() {
     this._ngZone.runOutsideAngular(() => {
-      const subscription = this._renders.pipe((0, import_operators2.takeUntil)((0, import_rxjs3.merge)(this._attachments, this._detachments))).subscribe(() => {
+      const subscription = this._renders.pipe((0, import_operators2.takeUntil)((0, import_rxjs2.merge)(this._attachments, this._detachments))).subscribe(() => {
         if (!this._pane || !this._host || this._pane.children.length === 0) {
           if (this._pane && this._config.panelClass) {
             this._toggleClasses(this._pane, this._config.panelClass, false);
@@ -3301,8 +3145,8 @@ var FlexibleConnectedPositionStrategy = class {
     this._viewportMargin = 0;
     this._scrollables = [];
     this._preferredPositions = [];
-    this._positionChanges = new import_rxjs3.Subject();
-    this._resizeSubscription = import_rxjs3.Subscription.EMPTY;
+    this._positionChanges = new import_rxjs2.Subject();
+    this._resizeSubscription = import_rxjs2.Subscription.EMPTY;
     this._offsetX = 0;
     this._offsetY = 0;
     this._appliedPanelClasses = [];
@@ -4562,10 +4406,10 @@ var _CdkConnectedOverlay = class _CdkConnectedOverlay {
   constructor(_overlay, templateRef, viewContainerRef, scrollStrategyFactory, _dir) {
     this._overlay = _overlay;
     this._dir = _dir;
-    this._backdropSubscription = import_rxjs3.Subscription.EMPTY;
-    this._attachSubscription = import_rxjs3.Subscription.EMPTY;
-    this._detachSubscription = import_rxjs3.Subscription.EMPTY;
-    this._positionSubscription = import_rxjs3.Subscription.EMPTY;
+    this._backdropSubscription = import_rxjs2.Subscription.EMPTY;
+    this._attachSubscription = import_rxjs2.Subscription.EMPTY;
+    this._detachSubscription = import_rxjs2.Subscription.EMPTY;
+    this._positionSubscription = import_rxjs2.Subscription.EMPTY;
     this._disposeOnNavigation = false;
     this._ngZone = inject(NgZone);
     this.viewportMargin = 0;
@@ -5059,7 +4903,7 @@ var FullscreenOverlayContainer = _FullscreenOverlayContainer;
 })();
 
 // node_modules/@angular/cdk/fesm2022/dialog.mjs
-var import_rxjs4 = __toESM(require_cjs(), 1);
+var import_rxjs3 = __toESM(require_cjs(), 1);
 var import_operators3 = __toESM(require_operators(), 1);
 function CdkDialogContainer_ng_template_0_Template(rf, ctx) {
 }
@@ -5396,7 +5240,7 @@ var DialogRef = class {
   constructor(overlayRef, config) {
     this.overlayRef = overlayRef;
     this.config = config;
-    this.closed = new import_rxjs4.Subject();
+    this.closed = new import_rxjs3.Subject();
     this.disableClose = config.disableClose;
     this.backdropClick = overlayRef.backdropClick();
     this.keydownEvents = overlayRef.keydownEvents();
@@ -5493,10 +5337,10 @@ var _Dialog = class _Dialog {
     this._parentDialog = _parentDialog;
     this._overlayContainer = _overlayContainer;
     this._openDialogsAtThisLevel = [];
-    this._afterAllClosedAtThisLevel = new import_rxjs4.Subject();
-    this._afterOpenedAtThisLevel = new import_rxjs4.Subject();
+    this._afterAllClosedAtThisLevel = new import_rxjs3.Subject();
+    this._afterOpenedAtThisLevel = new import_rxjs3.Subject();
     this._ariaHiddenElements = /* @__PURE__ */ new Map();
-    this.afterAllClosed = (0, import_rxjs4.defer)(() => this.openDialogs.length ? this._getAfterAllClosed() : this._getAfterAllClosed().pipe((0, import_operators3.startWith)(void 0)));
+    this.afterAllClosed = (0, import_rxjs3.defer)(() => this.openDialogs.length ? this._getAfterAllClosed() : this._getAfterAllClosed().pipe((0, import_operators3.startWith)(void 0)));
     this._scrollStrategy = scrollStrategy;
   }
   open(componentOrTemplateRef, config) {
@@ -5664,7 +5508,7 @@ var _Dialog = class _Dialog {
         provide: Directionality,
         useValue: {
           value: config.direction,
-          change: (0, import_rxjs4.of)()
+          change: (0, import_rxjs3.of)()
         }
       });
     }
@@ -5810,7 +5654,7 @@ var DialogModule = _DialogModule;
 })();
 
 // node_modules/@angular/material/fesm2022/dialog.mjs
-var import_rxjs5 = __toESM(require_cjs(), 1);
+var import_rxjs4 = __toESM(require_cjs(), 1);
 var import_operators4 = __toESM(require_operators(), 1);
 function MatDialogContainer_ng_template_2_Template(rf, ctx) {
 }
@@ -6074,8 +5918,8 @@ var MatDialogRef = class {
   constructor(_ref, config, _containerInstance) {
     this._ref = _ref;
     this._containerInstance = _containerInstance;
-    this._afterOpened = new import_rxjs5.Subject();
-    this._beforeClosed = new import_rxjs5.Subject();
+    this._afterOpened = new import_rxjs4.Subject();
+    this._beforeClosed = new import_rxjs4.Subject();
     this._state = MatDialogState.OPEN;
     this.disableClose = config.disableClose;
     this.id = _ref.id;
@@ -6093,7 +5937,7 @@ var MatDialogRef = class {
       this._beforeClosed.complete();
       this._finishDialogClose();
     });
-    (0, import_rxjs5.merge)(this.backdropClick(), this.keydownEvents().pipe((0, import_operators4.filter)((event) => event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event)))).subscribe((event) => {
+    (0, import_rxjs4.merge)(this.backdropClick(), this.keydownEvents().pipe((0, import_operators4.filter)((event) => event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event)))).subscribe((event) => {
       if (!this.disableClose) {
         event.preventDefault();
         _closeDialogVia(this, event.type === "keydown" ? "keyboard" : "mouse");
@@ -6240,10 +6084,10 @@ var _MatDialog = class _MatDialog {
     this._scrollStrategy = _scrollStrategy;
     this._parentDialog = _parentDialog;
     this._openDialogsAtThisLevel = [];
-    this._afterAllClosedAtThisLevel = new import_rxjs5.Subject();
-    this._afterOpenedAtThisLevel = new import_rxjs5.Subject();
+    this._afterAllClosedAtThisLevel = new import_rxjs4.Subject();
+    this._afterOpenedAtThisLevel = new import_rxjs4.Subject();
     this.dialogConfigClass = MatDialogConfig;
-    this.afterAllClosed = (0, import_rxjs5.defer)(() => this.openDialogs.length ? this._getAfterAllClosed() : this._getAfterAllClosed().pipe((0, import_operators4.startWith)(void 0)));
+    this.afterAllClosed = (0, import_rxjs4.defer)(() => this.openDialogs.length ? this._getAfterAllClosed() : this._getAfterAllClosed().pipe((0, import_operators4.startWith)(void 0)));
     this._dialog = injector.get(Dialog);
     this._dialogRefConstructor = MatDialogRef;
     this._dialogContainerType = MatDialogContainer;
